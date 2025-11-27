@@ -1,0 +1,15 @@
+# Percent chances for crafting
+crafting:
+  weapon:
+    common: 60
+    uncommon: 25
+    rare: 10
+    epic: 4
+    legendary: 1
+
+  armor:
+    common: 55
+    uncommon: 30
+    rare: 10
+    epic: 4
+    legendary: 1

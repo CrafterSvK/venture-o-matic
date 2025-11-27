@@ -1,0 +1,5 @@
+iron_sword:
+  requires:
+    wood: 1
+    iron_ore: 2
+  profession: "blacksmith"

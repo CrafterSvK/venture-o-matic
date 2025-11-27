@@ -1,0 +1,5 @@
+blacksmith:
+  name: "Blacksmith"
+  sells:
+    - iron_sword
+    - iron_ore

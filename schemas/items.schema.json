@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Item Templates",
+  "type": "object",
+  "properties": {
+    "rarities": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "stat_multiplier": { "type": "number" },
+          "value_multiplier": { "type": "number" },
+          "affix_count": {
+            "type": "object",
+            "properties": {
+              "min": { "type": "integer" },
+              "max": { "type": "integer" }
+            },
+            "required": ["min", "max"]
+          }
+        },
+        "required": ["stat_multiplier", "value_multiplier", "affix_count"]
+      }
+    },
+    "items": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string" },
+          "rarity": { "type": "string" },
+          "slot": { "type": "string" },
+          "base_value": { "type": "number" },
+          "base_stats": {
+            "type": "object",
+            "additionalProperties": { "type": "number" }
+          }
+        },
+        "required": ["type", "rarity"]
+      }
+    }
+  },
+  "required": ["rarities", "items"]
+}

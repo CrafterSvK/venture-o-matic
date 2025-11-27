@@ -1,0 +1,19 @@
+general:
+  no_character: "Nemáš ešte vytvorenú postavu."
+  char_created: "Postava {name} bola vytvorená!"
+
+shop:
+  not_found: "Obchod neexistuje."
+  no_gold: "Nemáš dostatok zlata."
+  bought: "Kúpil si {item} za {price} zlata."
+
+crafting:
+  success: "Vyrobil si {item}!"
+  missing_items: "Chýbajú ti materiály: {items}"
+
+profession:
+  learned: "Naučil si sa profesiu: {profession}"
+
+item:
+  iron_sword: "Železný meč"
+  iron_ore: "Železná ruda"

@@ -1,0 +1,19 @@
+general:
+  no_character: "You don't have a character yet."
+  char_created: "Character {name} has been created!"
+
+shop:
+  not_found: "Shop not found."
+  no_gold: "You don't have enough gold."
+  bought: "You bought {item} for {price} gold."
+
+crafting:
+  success: "You crafted {item}!"
+  missing_items: "You lack materials: {items}"
+
+profession:
+  learned: "You learned the profession: {profession}"
+
+item:
+  iron_sword: "Iron Sword"
+  iron_ore: "Iron Ore"

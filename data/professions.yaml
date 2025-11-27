@@ -1,0 +1,4 @@
+blacksmith:
+  name: "Blacksmith"
+  teaches:
+    - iron_sword
