@@ -54,7 +54,6 @@ items:
   iron_sword:
     type: weapon
     rarity: uncommon
-    slot: weapon
     base_value: 20
     base_stats:
       attack: 5
@@ -63,16 +62,14 @@ items:
   steel_sword:
     type: weapon
     rarity: rare
-    slot: weapon
     base_value: 40
     base_stats:
       attack: 9
       crit_chance: 0.04
 
   iron_armor:
-    type: armor
+    type: chestplate
     rarity: uncommon
-    slot: chest
     base_value: 25
     base_stats:
       defense: 6

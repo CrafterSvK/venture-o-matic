@@ -1,5 +1,9 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import Integer, String, ForeignKey, Boolean
+from sqlalchemy import String, ForeignKey
+
+import json
+
+from loader import t
 
 
 class Base(DeclarativeBase):
@@ -13,26 +17,23 @@ class Character(Base):
     user_id: Mapped[int] = mapped_column(unique=True, index=True)
     name: Mapped[str] = mapped_column()
     gold: Mapped[int] = mapped_column(default=0)
+    location: Mapped[str] = mapped_column(default="spawn")
 
-    # stackovateľné itemy (materiály atď.)
     inventory: Mapped[list["Inventory"]] = relationship(
         back_populates="character",
         cascade="all, delete-orphan",
     )
 
-    # jednotlivé instancie itemov (equipment, craftnuté zbrane atď.)
     item_instances: Mapped[list["ItemInstance"]] = relationship(
         back_populates="owner",
         cascade="all, delete-orphan",
     )
 
-    # equipnuté itemy – referencujú ItemInstance
     equipment: Mapped[list["EquippedItem"]] = relationship(
         back_populates="character",
         cascade="all, delete-orphan",
     )
 
-    # naučené profesie
     professions: Mapped[list["CharacterProfession"]] = relationship(
         back_populates="character",
         cascade="all, delete-orphan",
@@ -41,13 +42,13 @@ class Character(Base):
 
 class Inventory(Base):
     """
-    Stackovateľné veci (podľa template_id z YAML) – napr. wood, iron_ore...
+    Stackable items (crafting materials, etc.)
     """
     __tablename__ = "inventory"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     character_id: Mapped[int] = mapped_column(ForeignKey("characters.id"), index=True)
-    template_id: Mapped[str] = mapped_column(String(50))  # napr. "wood", "iron_ore"
+    template_id: Mapped[str] = mapped_column(String(50))
     amount: Mapped[int] = mapped_column(default=0)
 
     character: Mapped["Character"] = relationship(back_populates="inventory")
@@ -55,41 +56,59 @@ class Inventory(Base):
 
 class ItemInstance(Base):
     """
-    Konkrétna inštancia itemu – má rarity, affixy, konkrétne pre-rolované staty.
-    Používa sa hlavne na equipovateľné veci, dropy, market…
+    Instancable non-stackable items (weapons, armor, etc.)
     """
     __tablename__ = "item_instances"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     owner_id: Mapped[int] = mapped_column(ForeignKey("characters.id"), index=True)
 
-    # ID šablóny z YAML – napr. "iron_sword", "steel_sword"
-    template_id: Mapped[str] = mapped_column(String(50))
+    template_id: Mapped[str] = mapped_column(String(50), comment="Item template id")
+    rarity: Mapped[str] = mapped_column(String(30), comment="Rarity of the item")
+    rolled_stats: Mapped[str] = mapped_column(String, comment="JSON stats rolled on creation")
+    affixes: Mapped[str] = mapped_column(String, comment="Affixes applied to the item, JSON")
 
-    rarity: Mapped[str] = mapped_column(String(30))
-
-    # JSON string – napr. {"attack": 12.5, "crit_chance": 0.04}
-    rolled_stats: Mapped[str] = mapped_column(String)
-
-    # JSON string – napr. {"prefixes": ["deadly"], "suffixes": ["of_the_wolf"]}
-    affixes: Mapped[str] = mapped_column(String)
-
-    # marketplace stav
-    is_listed: Mapped[bool] = mapped_column(default=False)
-    list_price: Mapped[int] = mapped_column(default=0)
+    # MARKETPLACE
+    is_listed: Mapped[bool] = mapped_column(default=False, comment="Is listed on marketplace?")
+    list_price: Mapped[int] = mapped_column(default=0, comment="Price listed on marketplace")
 
     owner: Mapped["Character"] = relationship(back_populates="item_instances")
+
+    def __str__(self):
+        rarity_styles = {
+            "common": ("", "```text\n{n}\n```"),
+            "uncommon": ("+", "```diff\n+ {n}\n```"),
+            "rare": ("ini", "```ini\n[{n}]\n```"),
+            "epic": ("md", "```md\n## {n}\n```"),
+            "legendary": ("fix", "```fix\n{n}\n```")
+        }
+
+        style = rarity_styles.get(self.rarity, rarity_styles["common"])[1]
+
+        base_name = t(f"item.{self.template_id}")
+
+        affix_data = json.loads(self.affixes) if self.affixes else {"prefixes": [], "suffixes": []}
+
+        def fix_affix(a):
+            return a.replace("_", " ").title()
+
+        prefixes = [fix_affix(a) for a in affix_data.get("prefixes", [])]
+        suffixes = [fix_affix(a) for a in affix_data.get("suffixes", [])]
+
+        full_name = " ".join(prefixes + [base_name] + suffixes)
+
+        return style.format(n=full_name)
 
 
 class EquippedItem(Base):
     """
-    Aký ItemInstance je equipnutý v ktorom slote.
+    Equipped instancable item
     """
     __tablename__ = "equipped_items"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     character_id: Mapped[int] = mapped_column(ForeignKey("characters.id"), index=True)
-    slot: Mapped[str] = mapped_column(String(30))          # napr. "weapon", "chest"
+    slot: Mapped[str] = mapped_column(String(30))  # napr. "weapon", "chest"
     item_instance_id: Mapped[int] = mapped_column(
         ForeignKey("item_instances.id"),
         index=True,
@@ -101,7 +120,7 @@ class EquippedItem(Base):
 
 class CharacterProfession(Base):
     """
-    Naučené profesie – link postava <-> profesia (ID z YAML).
+    Profession of a character
     """
     __tablename__ = "character_professions"
 

@@ -1,22 +1,27 @@
-[project]
-name = "rpg"
+[tool.poetry]
+name = "bot"
 version = "0.1.0"
 description = ""
-authors = [
-    {name = "CrafterSvK",email = "jakub@janek.xyz"}
-]
+package-mode = false
+packages = []
+authors = ["CrafterSvK"]
 readme = "README.md"
-requires-python = ">=3.13"
-dependencies = [
-    "sqlalchemy (>=2.0.44,<3.0.0)",
-    "aiosqlite (>=0.21.0,<0.22.0)",
-    "alembic (>=1.17.2,<2.0.0)",
-    "discord-py (>=2.6.4,<3.0.0)",
-    "pyyaml (>=6.0.3,<7.0.0)",
-    "jsonschema (>=4.25.1,<5.0.0)",
-    "datamodel-code-generator (>=0.36.0,<0.37.0)"
-]
 
+[tool.poetry.dependencies]
+python = ">=3.13,<4.0"
+sqlalchemy = ">=2.0.44,<3.0.0"
+aiosqlite = ">=0.21.0,<0.22.0"
+alembic = ">=1.17.2,<2.0.0"
+"discord.py" = ">=2.6.4,<3.0.0"
+pyyaml = ">=6.0.3,<7.0.0"
+jsonschema = ">=4.25.1,<5.0.0"
+datamodel-code-generator = ">=0.36.0,<0.37.0"
+mypy = "^1.19.0"
+types-pyyaml = "^6.0.12.20250915"
+types-jsonschema = "^4.25.1.20251009"
+
+[tool.poetry.scripts]
+generate-models = "scripts.generate_models:main"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

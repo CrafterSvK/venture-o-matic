@@ -13,7 +13,7 @@ class Professions(commands.Cog):
     @app_commands.command(name="learn", description="Learn a profession")
     async def learn(self, interaction: discord.Interaction, profession: str):
         if DATA.professions.get(profession) is None:
-            return await interaction.response.send_message("Unknown profession.")
+            return await interaction.response.send_message(t("profession.unknown"))
 
         async with SessionLocal() as session:
             char = await session.scalar(select(Character).where(Character.user_id == interaction.user.id))
@@ -28,7 +28,7 @@ class Professions(commands.Cog):
             )
 
             if existing:
-                return await interaction.response.send_message("Already learned.")
+                return await interaction.response.send_message(t("profession.already_learned"))
 
             prof = CharacterProfession(character_id=char.id, profession_id=profession)
             session.add(prof)

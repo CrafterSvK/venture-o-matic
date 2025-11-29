@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 from sqlalchemy import select
 
+from generated.character_schema import CharacterData
 from loader import DATA, t
 from db import SessionLocal
 from models import Character, Inventory, EquippedItem
@@ -13,12 +14,12 @@ class Equipment(commands.Cog):
     @app_commands.command(name="equip", description="Equip an item from your inventory.")
     async def equip(self, interaction: discord.Interaction, item: str):
         if DATA.items.items.get(item) is None:
-            return await interaction.response.send_message("Unknown item.")
+            return await interaction.response.send_message(t("crafting.unknown"))
 
         item_data = DATA.items.items.get(item)
 
         if item_data.slot is None:
-            return await interaction.response.send_message("You cannot equip this item.")
+            return await interaction.response.send_message(t("character.cannot_equip"))
 
         async with SessionLocal() as session:
             char = await session.scalar(select(Character).where(Character.user_id == interaction.user.id))
@@ -33,7 +34,7 @@ class Equipment(commands.Cog):
                 )
             )
             if not inv:
-                return await interaction.response.send_message("You do not own this item.")
+                return await interaction.response.send_message(t("character.not_owned_item"))
 
             # Unequip existing item in same slot
             existing = await session.scalar(
@@ -53,12 +54,15 @@ class Equipment(commands.Cog):
             session.add(equip)
             await session.commit()
 
-        await interaction.response.send_message(
+        return await interaction.response.send_message(
             f"Equipped **{item_data['name']}** in **{item_data.slot}** slot."
         )
 
     @app_commands.command(name="unequip", description="Unequip an item")
     async def unequip(self, interaction: discord.Interaction, slot: str):
+        if slot not in CharacterData.slots:
+            return await interaction.response.send_message(t("character.invalid_slot"))
+
         async with SessionLocal() as session:
             char = await session.scalar(select(Character).where(Character.user_id == interaction.user.id))
             if not char:
@@ -72,12 +76,12 @@ class Equipment(commands.Cog):
             )
 
             if not eq:
-                return await interaction.response.send_message("Nothing equipped in that slot.")
+                return await interaction.response.send_message(t("character.nothing_equipped"))
 
             session.delete(eq)
             await session.commit()
 
-        await interaction.response.send_message(f"Unequipped item from slot **{slot}**.")
+        return await interaction.response.send_message(t("character.unequipped", slot=slot, item=eq.item_instance))
 
 async def setup(bot):
     await bot.add_cog(Equipment(bot))

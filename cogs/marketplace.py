@@ -6,7 +6,8 @@ from sqlalchemy import select
 
 from db import SessionLocal
 from models import Character, ItemInstance
-from loader import DATA
+from loader import DATA, t
+
 
 class Marketplace(commands.Cog):
     def __init__(self, bot): self.bot = bot
@@ -27,7 +28,7 @@ class Marketplace(commands.Cog):
             item.list_price = price
 
             await session.commit()
-            await interaction.response.send_message(f"Item listed for {price} gold.")
+            return await interaction.response.send_message(f"Item listed for {price} gold.")
 
     @app_commands.command(name="market_browse")
     async def market_browse(self, interaction):
@@ -35,25 +36,23 @@ class Marketplace(commands.Cog):
             listed = await session.execute(
                 select(ItemInstance).where(ItemInstance.is_listed == True)
             )
-            listed = listed.fetchall()
+            listed = listed.scalars()
 
             if not listed:
                 return await interaction.response.send_message("No items on the market.")
 
             embed = discord.Embed(title="Marketplace")
 
-            for row in listed:
-                inst: ItemInstance = row[0]
-                tmpl = DATA["items"][inst.template_id]
+            for inst in listed:
                 stats = json.loads(inst.rolled_stats)
 
                 embed.add_field(
-                    name=f"{tmpl['name']} [{inst.rarity}] — {inst.list_price}g (ID {inst.id})",
-                    value=f"Stats: {stats}",
+                    name=f"Item #{inst.id}",
+                    value=t("market.entry", item=inst, stats=stats, price=inst.list_price),
                     inline=False,
                 )
 
-        await interaction.response.send_message(embed=embed)
+        return await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="market_buy")
     async def market_buy(self, interaction, listing_id: int):
@@ -80,7 +79,7 @@ class Marketplace(commands.Cog):
 
             await session.commit()
 
-        await interaction.response.send_message("Purchase successful!")
+        return await interaction.response.send_message("Purchase successful!")
 
 async def setup(bot):
     await bot.add_cog(Marketplace(bot))

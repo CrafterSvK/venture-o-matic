@@ -1,6 +1,21 @@
 general:
   no_character: "You don't have a character yet."
+  character_exists: "A character with that name already exists."
+  already_character: "You already have a character."
   char_created: "Character {name} has been created!"
+  gold: "Gold"
+  location: "Location"
+
+character:
+  profile: "{name}'s profile"
+  not_owned_item: "You don't own this item."
+  cannot_equip: "You cannot equip this item."
+  unequipped: "You have unequipped {item} from {slot}."
+  nothing_equipped: "Nothing equipped in that slot."
+  invalid_slot: "Invalid slot."
+
+market:
+  entry: "{item}\nStats:\n{stats}\nPrice: {price} gold"
 
 shop:
   not_found: "Shop not found."
@@ -8,12 +23,28 @@ shop:
   bought: "You bought {item} for {price} gold."
 
 crafting:
+  unknown: "Unknown item."
   success: "You crafted {item}!"
   missing_items: "You lack materials: {items}"
+  success: "You crafted:\n{item}Stats:\n{stats}"
 
 profession:
+  unknown: "Unknown profession."
+  already_learned: "You already know this profession."
   learned: "You learned the profession: {profession}"
 
 item:
   iron_sword: "Iron Sword"
   iron_ore: "Iron Ore"
+
+stats:
+  attack: "Attack"
+
+pvp:
+  self_challenge: "You can't challenge yourself!"
+  no_opponent_character: "{opponent} doesn't have a character!"
+  challenge_sent: "Challenge sent to {opponent}!"
+  confirmation_message: "{challenger} has challenged {challenged} to a duel! Accept or decline?"
+  challenge_declined: "{challenger}, your challenge was declined."
+  duel_result: "{winner} won the duel against {loser}! Reward: {reward}. Penalty: {penalty}."
+  not_your_duel: "You are not requested for duel!"

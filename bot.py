@@ -20,6 +20,7 @@ initial_cogs = [
     "cogs.equipment",
     "cogs.marketplace",
     "cogs.professions",
+    "cogs.pvp",
 ]
 
 @bot.event

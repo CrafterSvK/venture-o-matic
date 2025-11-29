@@ -1,0 +1,15 @@
+soldatovo:
+  level: 10, 20
+  shops:
+    - blacksmith
+  features:
+    - swamp
+    - cave
+    - arid
+
+panorama:
+  level: 0, 10
+  features:
+    - forest
+    - plains
+    - temperate
