@@ -15,20 +15,21 @@ class Adventure(commands.Cog):
 
     @app_commands.command(name="adventure", description="Go on a short adventure.")
     async def adventure(self, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True)
         async with SessionLocal() as session:
             char = await session.scalar(
                 select(Character).where(Character.user_id == interaction.user.id)
             )
 
             if not char:
-                return await interaction.response.send_message(t("general.no_character"))
+                return await interaction.followup.send(t("general.no_character"), ephemeral=True)
 
             reward = random.randint(1, 10)
             char.gold += reward
 
             await session.commit()
 
-        await interaction.response.send_message(f"🗺️ You earned **{reward} gold**!")
+        await interaction.followup.send(t(f"adventure.reward", reward=reward), ephemeral=True)
 
 async def setup(bot):
     await bot.add_cog(Adventure(bot))

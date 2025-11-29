@@ -94,7 +94,7 @@ class PvP(commands.Cog):
                     )
                     await session.commit()
 
-                await interaction.response.send_message(
+                await interaction.followup.send(
                     t(
                         "pvp.duel_result",
                         winner=winner.name,

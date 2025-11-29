@@ -17,6 +17,8 @@ class Character(Base):
     user_id: Mapped[int] = mapped_column(unique=True, index=True)
     name: Mapped[str] = mapped_column()
     gold: Mapped[int] = mapped_column(default=0)
+    level: Mapped[int] = mapped_column(default=1)
+    xp: Mapped[int] = mapped_column(default=0)
     location: Mapped[str] = mapped_column(default="spawn")
 
     inventory: Mapped[list["Inventory"]] = relationship(
@@ -53,6 +55,9 @@ class Inventory(Base):
 
     character: Mapped["Character"] = relationship(back_populates="inventory")
 
+    def __str__(self):
+        return f"{self.amount}x {t(f'item.{self.template_id}')}"
+
 
 class ItemInstance(Base):
     """
@@ -74,30 +79,43 @@ class ItemInstance(Base):
 
     owner: Mapped["Character"] = relationship(back_populates="item_instances")
 
+    def name(self):
+        base_name = t(f"item.{self.template_id}")
+        affix_data = json.loads(self.affixes) if self.affixes else {"prefixes": [], "suffixes": []}
+        def fix_affix(a):
+            return a.replace("_", " ").title()
+        prefixes = [fix_affix(a) for a in affix_data.get("prefixes", [])]
+        suffixes = [fix_affix(a) for a in affix_data.get("suffixes", [])]
+        return " ".join(prefixes + [base_name] + suffixes)
+
     def __str__(self):
         rarity_styles = {
-            "common": ("", "```text\n{n}\n```"),
-            "uncommon": ("+", "```diff\n+ {n}\n```"),
-            "rare": ("ini", "```ini\n[{n}]\n```"),
-            "epic": ("md", "```md\n## {n}\n```"),
-            "legendary": ("fix", "```fix\n{n}\n```")
+            "common": ("", "```text\n{n}\n{s}```"), # white
+            "uncommon":  ("ansi", """
+```ansi
+[2;32m{n}[0m\n{s}!
+```
+"""), # green
+            "rare": ("ansi", """
+```ansi
+[2;34m{n}[0m\n{s}!
+```
+"""), # blue
+            "epic": ("ansi", """
+```ansi
+[2;31m{n}[0m\n{s}!
+```
+"""), # red
+            "legendary": ("ansi", """
+```ansi
+[2;33m{n}[0m\n{s}!
+```
+"""), # yellow
         }
 
         style = rarity_styles.get(self.rarity, rarity_styles["common"])[1]
 
-        base_name = t(f"item.{self.template_id}")
-
-        affix_data = json.loads(self.affixes) if self.affixes else {"prefixes": [], "suffixes": []}
-
-        def fix_affix(a):
-            return a.replace("_", " ").title()
-
-        prefixes = [fix_affix(a) for a in affix_data.get("prefixes", [])]
-        suffixes = [fix_affix(a) for a in affix_data.get("suffixes", [])]
-
-        full_name = " ".join(prefixes + [base_name] + suffixes)
-
-        return style.format(n=full_name)
+        return style.format(n=self.name(), s=json.loads(self.rolled_stats))
 
 
 class EquippedItem(Base):

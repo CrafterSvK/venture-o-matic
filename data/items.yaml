@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schemas/items.schema.json
+# yaml-language-server: $schema=../schemas/items.schema.yaml
 rarities:
   common:
     color: "#AAAAAA"
@@ -59,17 +59,16 @@ items:
       attack: 5
       crit_chance: 0.02
 
-  steel_sword:
-    type: weapon
-    rarity: rare
-    base_value: 40
-    base_stats:
-      attack: 9
-      crit_chance: 0.04
-
-  iron_armor:
+  iron_chestplate:
     type: chestplate
-    rarity: uncommon
-    base_value: 25
+    rarity: common
+    base_value: 20
     base_stats:
-      defense: 6
+      defense: 10
+
+  iron_hat:
+    type: helmet
+    rarity: common
+    base_value: 20
+    base_stats:
+      defense: 10

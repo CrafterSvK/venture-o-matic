@@ -2,3 +2,5 @@ blacksmith:
   name: "Blacksmith"
   teaches:
     - iron_sword
+    - iron_chestplate
+    - iron_hat

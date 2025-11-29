@@ -7,7 +7,14 @@ crafting:
     epic: 4
     legendary: 1
 
-  armor:
+  chestplate:
+    common: 55
+    uncommon: 30
+    rare: 10
+    epic: 4
+    legendary: 1
+
+  helmet:
     common: 55
     uncommon: 30
     rare: 10

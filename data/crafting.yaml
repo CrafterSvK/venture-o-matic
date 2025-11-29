@@ -3,3 +3,13 @@ iron_sword:
     wood: 1
     iron_ore: 2
   profession: "blacksmith"
+
+iron_chestplate:
+  requires:
+    iron_ore: 10
+  profession: "blacksmith"
+
+iron_hat:
+  requires:
+    iron_ore: 5
+  profession: "blacksmith"

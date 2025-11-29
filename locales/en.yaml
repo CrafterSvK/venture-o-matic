@@ -1,3 +1,6 @@
+adventure:
+  reward: "You earned {reward} gold."
+
 general:
   no_character: "You don't have a character yet."
   character_exists: "A character with that name already exists."
@@ -7,6 +10,9 @@ general:
   location: "Location"
   no_location: "Location does not exist."
   traveled_to_location: "Traveled to {location}."
+  items: "Items"
+  equipable_items: "Equip"
+  empty: "`Empty`"
 
 character:
   profile: "{name}'s profile"
@@ -15,6 +21,7 @@ character:
   unequipped: "You have unequipped {item} from {slot}."
   nothing_equipped: "Nothing equipped in that slot."
   invalid_slot: "Invalid slot."
+  inventory: "Inventory"
 
 market:
   entry: "{item}\nStats:\n{stats}\nPrice: {price} gold"
@@ -38,6 +45,9 @@ profession:
 item:
   iron_sword: "Iron Sword"
   iron_ore: "Iron Ore"
+  iron_chestplate: "Iron Chestplate"
+  iron_hat: "Iron Hat"
+  wood: "Wood"
 
 stats:
   attack: "Attack"
@@ -52,5 +62,6 @@ pvp:
   not_your_duel: "You are not requested for duel!"
 
 location:
+  features: "Features"
   panorama: "Panoráma"
   soldatovo: "Soldátovo"

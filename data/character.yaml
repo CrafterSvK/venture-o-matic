@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schemas/character.schema.json
+# yaml-language-server: $schema=../schemas/character.schema.yaml
 slots:
   weapon:
     holds:

@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../schemas/locations.schema.yaml
 locations:
   soldatovo:
     level: 10, 20
