@@ -1,0 +1,31 @@
+$id: "locations.schema.yaml"
+$schema: "http://json-schema.org/draft-07/schema#"
+title: LocationsData
+type: object
+
+properties:
+  locations:
+    type: object
+    additionalProperties:
+      title: Location
+      type: object
+      properties:
+        level:
+          type: string
+          description: "Level range in format 'min, max'"
+        shops:
+          type: array
+          items:
+            type: string
+        features:
+          type: array
+          items:
+            type: string
+      required:
+        - level
+        - features
+
+required:
+  - locations
+
+additionalProperties: false

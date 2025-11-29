@@ -5,6 +5,8 @@ general:
   char_created: "Character {name} has been created!"
   gold: "Gold"
   location: "Location"
+  no_location: "Location does not exist."
+  traveled_to_location: "Traveled to {location}."
 
 character:
   profile: "{name}'s profile"
@@ -48,3 +50,7 @@ pvp:
   challenge_declined: "{challenger}, your challenge was declined."
   duel_result: "{winner} won the duel against {loser}! Reward: {reward}. Penalty: {penalty}."
   not_your_duel: "You are not requested for duel!"
+
+location:
+  panorama: "Panoráma"
+  soldatovo: "Soldátovo"

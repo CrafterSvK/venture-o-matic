@@ -10,11 +10,13 @@ from pydantic import BaseModel, ValidationError
 
 from generated.character_schema import CharacterData
 from generated.items_schema import ItemTemplates
+from generated.locations_schema import LocationsData
 
 
 class GameData(BaseModel):
     items: ItemTemplates
     character: CharacterData
+    locations: LocationsData
     shops: dict[str, Any]
     crafting: dict[str, Any]
     professions: dict[str, Any]
@@ -42,6 +44,7 @@ def load_all_data():
 
     items_schema = os.path.join(schema_dir, "items.schema.yaml")
     character_schema = os.path.join(schema_dir, "character.schema.yaml")
+    locations_schema = os.path.join(schema_dir, "locations.schema.yaml")
 
     global DATA
     DATA = GameData(
@@ -59,6 +62,11 @@ def load_all_data():
                 schema_dir,
             )
         ),
+        locations=LocationsData.model_validate(load_and_validate(
+            os.path.join(base, "locations.yaml"),
+            locations_schema,
+            schema_dir,
+        )),
         shops=load_yaml(os.path.join(base, "shops.yaml")),
         crafting=load_yaml(os.path.join(base, "crafting.yaml")),
         professions=load_yaml(os.path.join(base, "professions.yaml")),
@@ -66,6 +74,7 @@ def load_all_data():
         rarity_rolls=load_yaml(os.path.join(base, "rarity_rolls.yaml")),
     )
     return DATA
+
 
 class YamlResolver(RefResolver):
     def resolve_remote(self, uri):
@@ -134,6 +143,7 @@ def load_and_validate(data_path: str, schema_path: str, base_schema_dir: str = "
         )
 
     return data
+
 
 def load_translations(language="en"):
     global I18N

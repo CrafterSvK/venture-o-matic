@@ -21,6 +21,7 @@ initial_cogs = [
     "cogs.marketplace",
     "cogs.professions",
     "cogs.pvp",
+    "cogs.location"
 ]
 
 @bot.event
