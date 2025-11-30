@@ -7,6 +7,21 @@ from loader import DATA, t
 from db import SessionLocal
 from models import Character, Inventory
 
+async def shop_autocomplete(interaction: discord.Interaction, current: str):
+    async with SessionLocal() as session:
+        character_location = await session.scalar(
+            select(Character.location)
+            .where(Character.user_id == interaction.user.id)
+        )
+
+        shops = list(DATA.locations.locations[character_location].shops)
+        matches = [
+            app_commands.Choice(name=t(f"shop.{shop}"), value=shop)
+            for shop in shops
+            if current.lower() in t(f"shop.{shop}").lower()
+        ]
+        return matches[:25]
+
 class Economy(commands.Cog):
     def __init__(self, bot): self.bot = bot
 

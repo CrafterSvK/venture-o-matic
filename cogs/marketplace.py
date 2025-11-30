@@ -6,7 +6,7 @@ from sqlalchemy import select
 
 from db import SessionLocal
 from models import Character, ItemInstance
-from loader import DATA, t
+from loader import t
 
 
 class Marketplace(commands.Cog):

@@ -39,8 +39,8 @@ class Adventure(commands.Cog):
 
                 return await interaction.followup.send(t(f"adventure.reward", reward=reward), ephemeral=True)
 
-            creature_lvl = char.level + random.uniform(-10, 10)
-            creature = Creature(name="Demon", level=1 if creature_lvl < 0 else creature_lvl)
+            creature_lvl = char.level + int(random.uniform(-2, 5))
+            creature = Creature(name=f"Demon lvl {creature_lvl}", level=1 if creature_lvl < 0 else creature_lvl)
 
             fight_engine = FightEngine()
 
