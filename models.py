@@ -10,8 +10,30 @@ from loader import t
 class Base(DeclarativeBase):
     pass
 
+class LivingEntity:
+    __abstract__ = True
+    name: str
+    BASE_XP = 100         # XP needed for Level 1 → 2
+    GROWTH = 1.20         # exponential scaling
 
-class Character(Base):
+    def xp_to_next_level(self) -> int:
+        return int(self.BASE_XP * (self.GROWTH ** (self.level - 1)))
+
+    def add_xp(self, amount: int) -> bool:
+        self.xp += amount
+        leveled = False
+
+        while self.xp >= self.xp_to_next_level():
+            self.xp -= self.xp_to_next_level()
+            self.level += 1
+            leveled = True
+
+        return leveled
+
+    def combat_stats(self):
+        pass
+
+class Character(Base, LivingEntity):
     __tablename__ = "characters"
 
     id: Mapped[int] = mapped_column(primary_key=True)

@@ -13,6 +13,7 @@ general:
   items: "Items"
   equipable_items: "Equip"
   empty: "`Empty`"
+  combat_stats: "Combat stats"
 
 character:
   profile: "{name}'s profile"

@@ -1,3 +1,5 @@
+import json
+
 import discord
 from discord.ext import commands
 from discord import app_commands
@@ -40,6 +42,7 @@ class Characters(commands.Cog):
         async with SessionLocal() as session:
             result: Character | None = await session.scalar(
                 select(Character).where(Character.user_id == user.id)
+                .options(selectinload(Character.equipment).selectinload(EquippedItem.item_instance))
             )
 
         if not result:
@@ -50,6 +53,7 @@ class Characters(commands.Cog):
         embed.add_field(name="XP", value=result.xp)
         embed.add_field(name=t("general.location"), value=result.location)
         embed.add_field(name=t("general.gold"), value=result.gold)
+        embed.add_field(name=t("general.combat_stats"), value="\n".join([f"{t(k)}: {v}" for k, v in result.combat_stats().items()]))
 
         await interaction.response.send_message(embed=embed, ephemeral=True)
 

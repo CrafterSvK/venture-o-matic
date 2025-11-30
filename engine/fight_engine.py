@@ -1,7 +1,6 @@
 import random
-import re
 
-from models import Character
+from models import LivingEntity
 
 
 class FightEngine:
@@ -20,7 +19,7 @@ class FightEngine:
 
         return round(damage, 2), True, crit
 
-    def resolve_duel(self, a: Character, b: Character):
+    def resolve_duel(self, a: LivingEntity, b: LivingEntity):
         stats_a = a.combat_stats()
         stats_b = b.combat_stats()
 
@@ -51,7 +50,7 @@ class FightEngine:
                     hp_a -= damage
 
                 if crit:
-                    text = f"➡️ {attacker.name} hits {defender.name} for [1;2m[1;31m{damage}[0m[0m damage"
+                    text = f"➡️ {attacker.name} hits {defender.name} for 💥 [1;2m[1;31m{damage}[0m[0m damage"
                 else:
                     text = f"➡️ {attacker.name} hits {defender.name} for [1;2m{damage}[0m damage"
 
@@ -61,6 +60,14 @@ class FightEngine:
 
             hp_line = f"❤️ {a.name}: {hp_a_before:.2f} HP | ❤️ {b.name}: {hp_b_before:.2f} HP"
             log.append(hp_line)
+
+            if hp_b < 0:
+                damage = hp_b
+                hp_b = 0
+
+            if hp_a < 0:
+                damage = hp_a
+                hp_a = 0
 
             if defender is a:
                 dmg_part = f"(-{damage:.2f})"
