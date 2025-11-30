@@ -1,10 +1,11 @@
+from dataclasses import dataclass
+
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import String, ForeignKey
 
 import json
 
 from loader import t
-
 
 class Base(DeclarativeBase):
     pass
@@ -40,6 +41,30 @@ class Character(Base):
         back_populates="character",
         cascade="all, delete-orphan",
     )
+
+    def combat_stats(self):
+        # Base stats
+        result = {
+            "hp": 100,
+            "attack": 5,
+            "defense": 0,
+            "crit_chance": 0.01,
+            "accuracy": 0,
+        }
+
+        # Add level scaling (optional)
+        result["hp"] += (self.level - 1) * 5
+        result["attack"] += (self.level - 1) * 1
+
+        # Add equipment stats
+        for e in self.equipment:
+            inst_stats = json.loads(e.item_instance.rolled_stats)
+
+            for k, v in inst_stats.items():
+                result[k] = result.get(k, 0) + v
+
+        return result
+
 
 
 class Inventory(Base):

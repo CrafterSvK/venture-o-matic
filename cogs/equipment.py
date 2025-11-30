@@ -66,7 +66,7 @@ class Equipment(commands.Cog):
                 )
             )
             if existing:
-                session.delete(existing)
+                await session.delete(existing)
 
             equip = EquippedItem(
                 character_id=char.id,
